@@ -27,6 +27,8 @@ class PacketField(object):
             Bit offset into packet, including primary header. If this is not
             specified, than the bit offset will the be calculated automatically
             from its position inside the packet definition.
+        tail_offset: int, optional
+            Bit offset from end of packet.
         byte_order : {'big', 'little'}, optional
             Byte order of the field. Defaults to big endian.
 
@@ -45,6 +47,8 @@ class PacketField(object):
             raise TypeError('bit_length parameter must be an int')
         if not (bit_offset is None or isinstance(bit_offset, (int, np.integer))):
             raise TypeError('bit_offset parameter must be an int')
+        if not (tail_offset is None or isinstance(tail_offset, (int, np.integer))):
+            raise TypeError('tail_offset parameter must be an int')
         
         valid_data_types = ('uint', 'int', 'float', 'str', 'fill')
         if data_type not in valid_data_types:
@@ -60,6 +64,7 @@ class PacketField(object):
         self._data_type = data_type
         self._bit_length = bit_length
         self._bit_offset = bit_offset
+        self._tail_offset = tail_offset
         self._byte_order = byte_order
 
     def __repr__(self):
@@ -67,10 +72,10 @@ class PacketField(object):
 
         return ('PacketField(name={_name}, data_type={_data_type}, '
                 'bit_length={_bit_length}, bit_offset={_bit_offset}, '
-                'byte_order={_byte_order})'.format(**values))
+                'tail_offset={_tail_offset}, byte_order={_byte_order})'.format(**values))
 
     def __iter__(self):
-        return iter([('name', self._name), ('dataType', self._data_type), ('bitLength', self._bit_length), ('bitOffset', self._bit_offset), ('byteOrder', self._byte_order)])
+        return iter([('name', self._name), ('dataType', self._data_type), ('bitLength', self._bit_length), ('bitOffset', self._bit_offset), ('tailOffset', self._tail_offset) ('byteOrder', self._byte_order)])
 
                 
 class FixedLength(object):

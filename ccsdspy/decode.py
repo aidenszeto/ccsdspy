@@ -50,6 +50,10 @@ def _decode_fixed_length(file_bytes, fields):
             # definition of 0 or more bits.
             bit_offset[field._name] = field._bit_offset
             counter = field._bit_offset + field._bit_length
+        elif field._bit_length - field._tail_offset <= counter:
+            #case: counter has reached end of data field
+            bit_offset[field._name] = field._bit_offset
+            counter = field._bit_length - field._tail_offset
         else:
             raise RuntimeError(("Unexpected case: could not compare"
                                 " bit_offset {} with counter {} for field {}"
